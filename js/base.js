@@ -1,5 +1,6 @@
-require("expose-loader?$!jquery");
+const $ = require('jquery')
 const validator = require('validator')
+
 module.exports = class Base {
 
 	cancel(){
@@ -11,28 +12,8 @@ module.exports = class Base {
 		})
 	}
 
-	costruct_list_errors(errors){
-		let lista = '<ul>'
-		$.each(errors,function(index,el){
-			lista += `<li>Campo: ${errors[index].campo} Error: ${errors[index].message}</li>`
-		})
-		
-		lista += '</ul>'
-		
-		return lista
-	}
 
-
-	valida_string_complete(datos,max){
-		let resultados = new Array()
-		
-		resultados.push(this.valida_empty(datos))
-		//resultados.push(this.valida_letras(datos))
-		//resultados.push(this.valida_length(datos,max))
-		return resultados
-	}
-
-	valida_letras(datos) {
+	valida_string(datos,max){
 		let resultados = new Array()
 		$.each(datos, function(index, val) {
 			 if(!validator.isAlpha(datos[index].value)){
@@ -40,40 +21,29 @@ module.exports = class Base {
 			 		campo:datos[index].name,
 			 		message:'El campo solo puede contener Letras'
 			 	})
-			 } 
+			 }
 
-			
-		});
-		return resultados
-	}
-
-	valida_length(datos){
-		let resultados = new Array()
-		$.each(datos,function(index,el){
-			 if(!validator.isLength(datos[index].value,{min:1,max:max[index]})){
+			if(!validator.isLength(datos[index].value,{min:1,max:max[index]})){
 				 resultados.push({
 			 		campo:datos[index].name,
 			 		message:`El campo NO puede tener mas de ${max} caracteres`
 			 	})	
-			 }
-		})
-		return resultados
-	}
-	
-	valida_empty(datos) {
-		let resultados = new Array()
-		$.each(datos,function(index,el){
+			}
+
 			if(validator.isEmpty(datos[index].value)){
 				 resultados.push({
 			 		campo:datos[index].name,
 			 		message:'El campos NO puede estar vacio'
 			 	})	
 			}
+			
 		})
+		
 		return resultados
 	}
 
-	valida_numeros(datos) {
+
+	valida_number(datos) {
 		let resultados = new Array()
 		$.each(datos,function(index,el){
 			if(validator.isNumeric(datos[index].value)){
@@ -82,7 +52,53 @@ module.exports = class Base {
 			 		message:'El campos solo puede contener numeros'
 			 	})	
 			}
+
+			if(validator.isEmpty(datos[index].value)){
+				 resultados.push({
+			 		campo:datos[index].name,
+			 		message:'El campos NO puede estar vacio'
+			 	})	
+			}
+
 		})
 		return resultados
+	}
+
+	construct_table_errors(datos) {
+		let ul = ''
+
+		$.each(datos, function(index, val) {
+			 ul += `<ul>
+			 		<li><strong>Campo:</strong> ${datos[index].campo}</li>
+			 		<li><strong>Error:</strong> ${datos[index].message}</li>
+			 		</ul>`
+		})	
+		//ul += '</ul>'
+		
+		return ul
+	}
+
+
+	async new_insert(datos,ruta){
+		let test = await this.send_data(datos,ruta)
+		for(let x in test){
+			for(let y in test[x]){
+				console.log(test[x][y])
+			}
+		}	
+	}
+
+	send_data(datos,ruta) {
+		let promesa = new Promise(resolve => {
+			$.post({
+				url:`/SIA/juridico/${ruta}/create`,
+				data:datos,
+				success:function(res) {
+					resolve(JSON.parse(res))
+				}
+			})
+		})
+
+		return promesa
 	}
 }
