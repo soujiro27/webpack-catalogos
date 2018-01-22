@@ -33,7 +33,7 @@ module.exports = class Base {
 			if(validator.isEmpty(datos[index].value)){
 				 resultados.push({
 			 		campo:datos[index].name,
-			 		message:'El campos NO puede estar vacio'
+			 		message:'El campo NO puede estar vacio'
 			 	})	
 			}
 			
