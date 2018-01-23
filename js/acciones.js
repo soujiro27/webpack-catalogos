@@ -13,14 +13,35 @@ module.exports = class Acciones {
 		$('form#Acciones').submit(function(e) {
 			e.preventDefault()
 			let datos = $(this).serializeArray()
-			/*let validacion = base.valida_string(datos,[50])
+			let validacion = base.valida_string(datos,[50])
 			let tabla = base.construct_table_errors(validacion)
 			if(validacion.length > 0){
 				modal.errors(tabla)				
 			} else {
 				base.new_insert(datos,'Acciones')
-			}*/
-			base.new_insert(datos,'Acciones')
+			}
+			
+
 		})
 	}
+
+
+	update(){
+		$('form#Acciones-update').submit(function(e){
+			e.preventDefault()
+			let datos = $(this).serializeArray()
+			
+			let strings_validar = base.campos_update_validation(datos,['nombre','estatus'])
+			let validacion = base.valida_string(strings_validar,[50,10])
+			let tabla = base.construct_table_errors(validacion)
+			if(validacion.length > 0){
+				modal.errors(tabla)				
+			} else {
+				base.new_update(datos,'Acciones')
+			}
+			
+		})
+	}
+
+	
 }
