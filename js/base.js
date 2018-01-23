@@ -56,6 +56,22 @@ module.exports = class Base {
 	}
 
 
+	valida_empty(datos) {
+
+		let resultados = new Array()
+
+		if(validator.isEmpty(datos[index].value)){
+				 resultados.push({
+			 		campo:datos[index].name,
+			 		message:'El campo NO puede estar vacio'
+			 	})	
+			}
+
+		return resultados
+	}
+
+
+
 	valida_number(datos) {
 	//funcion que valida los numeros
 		let resultados = new Array()

@@ -45,15 +45,24 @@ module.exports = class Textos {
 	}
 
 	form_submit(){
+		let self = this
 		$('form#DoctosTextos').submit(function(e){
 			e.preventDefault()
 			let datos = $(this).serializeArray()
-			console.log(datos)
-			var contenido = CKEDITOR.instances['ckeditor'].getData();
-			console.log(contenido)
-			let campos_string = base.campos_update_validation(datos,['documento'])
-			let valida = base.valida_string(campos_string,[50])
-			console.log(valida)
+			var texto = CKEDITOR.instances['ckeditor'].getData()
+			self.form_valida(datos,texto)
 		})
+	}
+
+	form_valida(datos,texto){
+		let documentos = base.campos_update_validation(datos,['documento','subDocumento'])
+		let empty = base.valida_empty(documentos)
+		let tabla = base.construct_table_errors(validacion)
+		if(validacion.length > 0){
+			modal.errors(tabla)				
+		} else {
+			//base.new_insert(datos,'Acciones')
+			console.log('Insert')
+		}
 	}
 }
