@@ -50,19 +50,52 @@ module.exports = class Textos {
 			e.preventDefault()
 			let datos = $(this).serializeArray()
 			var texto = CKEDITOR.instances['ckeditor'].getData()
-			self.form_valida(datos,texto)
+			let res = self.form_valida(datos,texto)
+			if(res){
+				datos[2].value = texto
+				base.new_insert(datos,'DoctosTextos')
+			}
 		})
 	}
 
 	form_valida(datos,texto){
+		let res = false
 		let documentos = base.campos_update_validation(datos,['documento','subDocumento'])
 		let empty = base.valida_empty(documentos)
-		let tabla = base.construct_table_errors(validacion)
-		if(validacion.length > 0){
+		let empty_text = base.valida_empty([{
+			name:'texto',
+			value:texto
+		}])
+
+		let tabla = base.construct_table_errors(empty)
+		let tabla_texto = base.construct_table_errors(empty_text)
+		
+		if(empty.length > 0){
 			modal.errors(tabla)				
-		} else {
-			//base.new_insert(datos,'Acciones')
-			console.log('Insert')
+		} 
+		else if (empty_text.length > 0) {
+			modal.errors(tabla_texto)
 		}
+		else {
+			res = true
+			
+		}
+		return res
+
+
+	}
+
+	form_update_submit(){
+		let self = this
+		$('form#DoctosTextos-update').submit(function(e){
+			e.preventDefault()
+			let datos = $(this).serializeArray()
+			var texto = CKEDITOR.instances['ckeditor'].getData()
+			let res = self.form_valida(datos,texto)
+			if(res){
+				datos[2].value = texto
+				base.new_update(datos,'DoctosTextos')
+			}
+		})
 	}
 }

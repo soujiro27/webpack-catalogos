@@ -59,14 +59,14 @@ module.exports = class Base {
 	valida_empty(datos) {
 
 		let resultados = new Array()
-
-		if(validator.isEmpty(datos[index].value)){
-				 resultados.push({
-			 		campo:datos[index].name,
-			 		message:'El campo NO puede estar vacio'
-			 	})	
-			}
-
+		$.each(datos, function(index, val) {
+			if(validator.isEmpty(datos[index].value)){
+					 resultados.push({
+				 		campo:datos[index].name,
+				 		message:'El campo NO puede estar vacio'
+				 	})	
+				}
+		})
 		return resultados
 	}
 
